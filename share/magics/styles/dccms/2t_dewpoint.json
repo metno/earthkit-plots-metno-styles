@@ -3,7 +3,6 @@
     "eccharts_layer": "2t_dewpoint",
     "prefered_units": "C",
     "styles": [
-      "dccms_sh_dpt_fM12t46i2",
       "sh_all_fM48t56i4",
       "sh_all_fM64t52i4",
       "ct_red_i2_dash",
@@ -13,7 +12,8 @@
       "sh_all_fM52t48i4_light",
       "sh_gry_fM72t56lst",
       "ct_red_i4_t3",
-      "transparent_zero_blue"
+      "transparent_zero_blue",
+      "dccms_sh_dpt_fM12t46i2"
     ],
     "match": [
       {

@@ -543,13 +543,15 @@ def extend_stock_files(per_identity):
                 note(manifest, path, index, "match", entry)
             targets.add((path, index))
 
-        # DCCMS styles go first so they stay the default: Magics and skinnyWMS
-        # both take styles[0] when the caller asks for no particular style.
+        # DCCMS styles go last, after the record's own. Note that this leaves
+        # the stock style as the default: Magics and skinnyWMS both take
+        # styles[0] when the caller asks for no particular style, so a client
+        # that sends no STYLES gets upstream's choice, not the DCCMS one.
         for path, index in targets:
             record = by_path[path][index]
             base = record.get("styles", [])
             added = [s for s in style_names if s not in base]
-            record["styles"] = style_names + [s for s in base if s not in style_names]
+            record["styles"] = [s for s in base if s not in style_names] + style_names
             for name in added:
                 note(manifest, path, index, "styles", name)
             touched.setdefault(path.name, set()).add(identity)
