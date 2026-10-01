@@ -2,11 +2,11 @@
   {
     "eccharts_layer": "lcc",
     "styles": [
-      "dccms_sh_cloud_f0t1i01",
       "transparency_grey",
       "sh_gry_f0t1lst",
       "sh_redgry_f0t1lst",
-      "tran_gry_f03t1lst"
+      "tran_gry_f03t1lst",
+      "dccms_sh_cloud_f0t1i01"
     ],
     "match": [
       {

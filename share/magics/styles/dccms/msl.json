@@ -3,8 +3,6 @@
     "eccharts_layer": "msl",
     "prefered_units": "hPa",
     "styles": [
-      "dccms_ct_msl_i4",
-      "dccms_ct_msl_i400_pa",
       "ct_blk_i5_t2",
       "ct_blk_i5_t1",
       "ct_blk_i5_t1_hilo",
@@ -17,7 +15,9 @@
       "ct_red_i5_t4",
       "ct_brn_i4_t2",
       "ct_blk_i2_t4",
-      "ct_green_i2_t4"
+      "ct_green_i2_t4",
+      "dccms_ct_msl_i4",
+      "dccms_ct_msl_i400_pa"
     ],
     "match": [
       {

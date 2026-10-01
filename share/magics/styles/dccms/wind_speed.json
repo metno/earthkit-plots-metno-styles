@@ -2,14 +2,14 @@
   {
     "eccharts_layer": "wind_speed",
     "styles": [
-      "dccms_sh_ws_f0t31lst",
-      "dccms_sh_ws_f0t110lst",
       "sh_red_f5t70lst",
       "sh_all_f03t70_beauf",
       "sh_all_f2t50i2",
       "sh_all_f5t70lst",
       "ct_red_i5",
-      "sh_grn_f10t100lst"
+      "sh_grn_f10t100lst",
+      "dccms_sh_ws_f0t31lst",
+      "dccms_sh_ws_f0t110lst"
     ],
     "match": [
       {

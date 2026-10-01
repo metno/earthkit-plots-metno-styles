@@ -11,10 +11,10 @@
       "250rh"
     ],
     "styles": [
-      "dccms_sh_r_f0t100i5",
       "sh_grnblu_f65t100i15",
       "sh_grnblu_f65t100i15_light",
-      "ct_grnblu_f65t100i15"
+      "ct_grnblu_f65t100i15",
+      "dccms_sh_r_f0t100i5"
     ],
     "match": [
       {

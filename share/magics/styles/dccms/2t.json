@@ -3,7 +3,6 @@
     "eccharts_layer": "2t",
     "prefered_units": "C",
     "styles": [
-      "dccms_sh_2t_fM4t50i2",
       "sh_all_fM48t56i4",
       "sh_all_fM64t52i4",
       "ct_red_i2_dash",
@@ -15,7 +14,8 @@
       "ct_red_i4_t3",
       "sh_all_fM80t56i4_v2",
       "sh_all_fM50t58i2",
-      "transparent_zero_blue"
+      "transparent_zero_blue",
+      "dccms_sh_2t_fM4t50i2"
     ],
     "match": [
       {

@@ -150,11 +150,11 @@ setting (`legend_values_list` has no effect here, and setting it suppresses the
 **Wind speed in km h⁻¹.** Magics converts units only where its installation
 carries a rule in `share/magics/units-rules.json`, and stock Magics has no
 `m s**-1` → `km/h` rule. Neither a `scaling` block in the parameter file nor
-`grib_scaling_factor` in the style is honoured for this. `wind_speed.json`
-therefore lists the **m s⁻¹** style first, so an out-of-the-box plot is numerically
-correct — note this differs from the earthkit library, where km h⁻¹ is
-`optimal`. To get km h⁻¹, merge `dccms_units-rules.json` into the Magics
-installation:
+`grib_scaling_factor` in the style is honoured for this. Of the two DCCMS wind
+styles, the **m s⁻¹** one is listed first, so anyone reaching for the first
+DCCMS entry gets a numerically correct plot — note this differs from the
+earthkit library, where km h⁻¹ is `optimal`. To use km h⁻¹, merge
+`dccms_units-rules.json` into the Magics installation:
 
 ```bash
 python - <<'EOF'
@@ -167,8 +167,8 @@ json.dump(rules, open(path, "w"), indent=1)
 EOF
 ```
 
-then add `"prefered_units": "km/h"` to `wind_speed.json` and move
-`dccms_sh_ws_f0t110lst` to the front of its `styles` list.
+then add `"prefered_units": "km/h"` to `wind_speed.json` and swap the order of
+the two entries in `STYLE_ORDER_OVERRIDES` in the generator.
 
 **Contour line widths.** `MEAN_SEA_LEVEL_PRESSURE_*` cycles matplotlib
 `linewidths: [0.5, 0.5, 0.5, 1]` over its levels. Magics expresses this as a
@@ -201,24 +201,44 @@ still render by name.
 So `tools/earthkit_to_magics.py` extends the stock files in place instead.
 Each DCCMS criterion is added to whichever record already claims its paramId
 without narrowing it by level or product type; criteria with no such owner, and
-criteria naming no paramId, go to the identity's primary file. The DCCMS style
-names go in front of that record's own, so they stay the default — Magics and
-skinnyWMS both take `styles[0]` when the caller asks for no particular style.
+criteria naming no paramId, go to the identity's primary file.
 
 One record matches, no tie to break, and every field keeps its stock
 alternatives:
 
-| Field | Extends | Advertised | Default |
-|-------|---------|-----------:|---------|
-| 2t | `2t.json` | 13 | `dccms_sh_2t_fM4t50i2` |
-| msl | `msl.json` | 15 | `dccms_ct_msl_i4` |
-| dpt | `2t_dewpoint.json` | 11 | `dccms_sh_dpt_fM12t46i2` |
-| tp | `tp_interval.json` | 9 | `dccms_sh_tp_f0t200lst` |
-| ws | `wind_speed.json` | 8 | `dccms_sh_ws_f0t31lst` |
-| sst | `sst.json` | 7 | `dccms_sh_sst_fM1t30i1` |
-| w | `700w.json` | 6 | `dccms_sh_w_fM20t15lst` |
-| tcc | `lcc.json`, `hcc.json`, `mcc.json` | 5 | `dccms_sh_cloud_f0t1i01` |
-| r | `rh1000.json` | 4 | `dccms_sh_r_f0t100i5` |
+| Field | Extends | Advertised | DCCMS at | Default |
+|-------|---------|-----------:|---------:|---------|
+| msl | `msl.json` | 15 | 13–14 | `ct_blk_i5_t2` |
+| 2t | `2t.json` | 13 | 12 | `sh_all_fM48t56i4` |
+| dpt | `2t_dewpoint.json` | 11 | 10 | `sh_all_fM48t56i4` |
+| tp | `tp_interval.json` | 9 | 8 | `sh_blured_f05t300lst` |
+| ws | `wind_speed.json` | 8 | 6–7 | `sh_red_f5t70lst` |
+| sst | `sst.json` | 7 | 5–6 | `sh_sst_fM2t36i2` |
+| w | `700w.json` | 6 | 5 | `sh_blured_fM5t5lst` |
+| tcc | `lcc.json`, `hcc.json`, `mcc.json` | 5 | 4 | `transparency_grey` |
+| r | `rh1000.json` | 4 | 3 | `sh_grnblu_f65t100i15` |
+
+### The DCCMS styles are not the default
+
+They are appended **after** each record's own styles, so `styles[0]` is
+upstream's choice. Magics and skinnyWMS both take `styles[0]` when the caller
+asks for no particular style, which means a WMS client that sends no `STYLES`
+parameter, or an `mcont(contour_automatic_setting="ecmwf")` call, renders the
+**stock** style — not the DCCMS one.
+
+To get DCCMS styling, ask for it by name:
+
+```python
+magics.mcont(
+    contour_automatic_setting="style_name",
+    contour_style_name="dccms_sh_2t_fM4t50i2",
+)
+```
+
+or, over WMS, pass the style in the `STYLES` parameter of the `GetMap` request.
+
+To make DCCMS the default instead, flip the concatenation in
+`extend_stock_files` so `style_names` comes first.
 
 Cloud cover spans three upstream files because one DCCMS identity covers what
 upstream splits by cloud layer. Sending every criterion to a single file would
